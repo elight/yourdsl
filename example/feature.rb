@@ -1,4 +1,4 @@
-load '../lib/lispy.rb'
+load '../lib/yourdsl.rb'
 
 require 'test/unit'
 
@@ -6,8 +6,8 @@ class Feature < Test::Unit::TestCase
   PROC_KEYWORDS = [:Given, :When, :Then, :And]
   KEYWORDS = [:Scenario, :Tag] + PROC_KEYWORDS
 
-  extend Lispy
-  acts_lispy :only => KEYWORDS, :retain_blocks_for => PROC_KEYWORDS
+  extend YourDSL
+  record_your_dsl :only => KEYWORDS, :retain_blocks_for => PROC_KEYWORDS
 
   # Everything after this gets lispyified
 
