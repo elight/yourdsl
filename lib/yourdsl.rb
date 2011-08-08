@@ -1,15 +1,9 @@
 module YourDSL
+  VERSION = '0.7.1'
+
   class Scope < Struct.new(:expressions); end
   class Expression < Struct.new(:symbol, :args, :lineno, :proc, :scope); end
   class Output < Struct.new(:file, :expressions); end
-
-  VERSION = '0.7.0'
-
-  METHODS_TO_KEEP = /^__/, /class/, /instance_/, /method_missing/, /object_id/
-
-  instance_methods.each do |m|
-    undef_method m unless METHODS_TO_KEEP.find { |r| r.match m }
-  end
 
   def record_your_dsl(opts = {})
     @@remember_blocks_starting_with = Array(opts[:retain_blocks_for])
