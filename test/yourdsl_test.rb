@@ -1,10 +1,10 @@
 require 'test/unit'
-require 'lispy'
+require 'yourdsl'
 
-class LispyTest < Test::Unit::TestCase
+class YourDSLTest < Test::Unit::TestCase
   class Whatever
-    extend Lispy
-    acts_lispy
+    extend YourDSL
+    record_your_dsl
 
     setup :workers => 30, :connections => 1024
     http :access_log => :off do
@@ -22,9 +22,9 @@ class LispyTest < Test::Unit::TestCase
   end
   @@whatever = Whatever.output
 
-  class MoarLispy
-    extend Lispy
-    acts_lispy
+  class MoarYourDSL
+    extend YourDSL
+    record_your_dsl
 
     setup
     setup do
@@ -35,11 +35,11 @@ class LispyTest < Test::Unit::TestCase
       end
     end
   end
-  @@moar_lispy = MoarLispy.output
+  @@moar_yourdsl = MoarYourDSL.output
 
   class RetainBlocks
-    extend Lispy
-    acts_lispy :retain_blocks_for => [:Given, :When, :Then]
+    extend YourDSL
+    record_your_dsl :retain_blocks_for => [:Given, :When, :Then]
 
     Scenario "My first awesome scenario" do
       Given "teh shiznit" do
@@ -57,8 +57,8 @@ class LispyTest < Test::Unit::TestCase
 
   begin
     class OptInParsing
-      extend Lispy
-      acts_lispy :only => [:Foo]
+      extend YourDSL
+      record_your_dsl :only => [:Foo]
 
       Foo "bar" do
         blech
@@ -70,8 +70,8 @@ class LispyTest < Test::Unit::TestCase
 
   begin
     class OptOutParsing
-      extend Lispy
-      acts_lispy :except => [:blech]
+      extend YourDSL
+      record_your_dsl :except => [:blech]
 
       Foo "bar" do
         blech
@@ -81,49 +81,49 @@ class LispyTest < Test::Unit::TestCase
     @@opt_out_parsing_error = $!
   end
 
-  def test_lispy
-    expected = Lispy::Output.new(__FILE__, [
-      Lispy::Expression.new(:setup, {:workers=>30, :connections=>1024}, "9"),
-      Lispy::Expression.new(:http, {:access_log =>:off}, "10", nil,
-        Lispy::Scope.new.tap { |s1| s1.expressions = [
-          Lispy::Expression.new(:server, {:listen=>80}, "11", nil,
-            Lispy::Scope.new.tap { |s2| s2.expressions = [
-              Lispy::Expression.new(:location, '/', "12", nil,
-                Lispy::Scope.new.tap { |s3| s3.expressions = [
-                  Lispy::Expression.new(:doc_root, '/var/www/website', "13")
+  def test_yourdsl
+    expected = YourDSL::Output.new(__FILE__, [
+      YourDSL::Expression.new(:setup, {:workers=>30, :connections=>1024}, "9"),
+      YourDSL::Expression.new(:http, {:access_log =>:off}, "10", nil,
+        YourDSL::Scope.new.tap { |s1| s1.expressions = [
+          YourDSL::Expression.new(:server, {:listen=>80}, "11", nil,
+            YourDSL::Scope.new.tap { |s2| s2.expressions = [
+              YourDSL::Expression.new(:location, '/', "12", nil,
+                YourDSL::Scope.new.tap { |s3| s3.expressions = [
+                  YourDSL::Expression.new(:doc_root, '/var/www/website', "13")
                 ]}
               ),
-              Lispy::Expression.new(:location, '~ .php$', "15", nil,
-                Lispy::Scope.new.tap { |s4| s4.expressions = [
-                  Lispy::Expression.new(:fcgi, {:port => 8877}, "16"),
-                  Lispy::Expression.new(:script_root, '/var/www/website', "17")
+              YourDSL::Expression.new(:location, '~ .php$', "15", nil,
+                YourDSL::Scope.new.tap { |s4| s4.expressions = [
+                  YourDSL::Expression.new(:fcgi, {:port => 8877}, "16"),
+                  YourDSL::Expression.new(:script_root, '/var/www/website', "17")
                 ]}
               )
             ]}
           )
         ]}
       ),
-      Lispy::Expression.new(:ohai, [], "21")
+      YourDSL::Expression.new(:ohai, [], "21")
     ])
     assert_equal expected, @@whatever
   end
 
-  def test_moar_lispy
-    expected = Lispy::Output.new(__FILE__, [
-      Lispy::Expression.new(:setup, [], "29"),
-      Lispy::Expression.new(:setup, [], "30", nil,
-        Lispy::Scope.new.tap { |s1| s1.expressions = [
-          Lispy::Expression.new(:lol, [], "31"),
-          Lispy::Expression.new(:lol, [], "32", nil,
-            Lispy::Scope.new.tap { |s2| s2.expressions = [
-              Lispy::Expression.new(:hi, [], "33"),
-              Lispy::Expression.new(:hi, [], "34")
+  def test_moar_yourdsl
+    expected = YourDSL::Output.new(__FILE__, [
+      YourDSL::Expression.new(:setup, [], "29"),
+      YourDSL::Expression.new(:setup, [], "30", nil,
+        YourDSL::Scope.new.tap { |s1| s1.expressions = [
+          YourDSL::Expression.new(:lol, [], "31"),
+          YourDSL::Expression.new(:lol, [], "32", nil,
+            YourDSL::Scope.new.tap { |s2| s2.expressions = [
+              YourDSL::Expression.new(:hi, [], "33"),
+              YourDSL::Expression.new(:hi, [], "34")
             ]}
           )
         ]}
       )
     ])
-    assert_equal expected, @@moar_lispy
+    assert_equal expected, @@moar_yourdsl
   end
 
   def test_conditionally_preserving_procs

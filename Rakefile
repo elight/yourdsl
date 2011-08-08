@@ -5,10 +5,10 @@ task :default do
   Rake::Task['run_tests'].invoke
 end
 
-task :run_tests do 
+task :run_tests do
   if RUBY_VERSION =~ /^1.9/
-    require_relative 'test/lispy_test' # for fuck's sake.
+    require_relative 'test/yourdsl_test'
   else
-    require 'test/lispy_test'
+    require 'test/yourdsl_test'
   end
 end
