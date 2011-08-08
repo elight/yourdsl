@@ -1,12 +1,12 @@
-# LISPY
+# YourDSL
 
 ## Assumptions.
 
-* People love libraries like Sinatra and ActiveRecord and Babushka and AASM and (name your favourite Ruby library).
+* People love libraries with DSLs like Sinatra and ActiveRecord and Babushka and AASM and (name your favourite Ruby library).
 * What they love about these is the small amount of Ruby syntax required to get a whole lot done.
 * They love that they can contextualise their definitions (that make the libraries do things) with natural Ruby syntax such as blocks.
 * To enable these kinds of libraries the use of so-called 'meta-programming' constructs are required (instance_eval, instance_exec).
-* Clever but inexperienced Ruby programmers often make very useful libraries with wonderful APIs but horrible internals (my hand is up, see: Workflow).
+* Clever but inexperienced Ruby programmers often make very useful libraries with wonderful APIs but horrible internals
 
 ## Goals.
 
@@ -20,8 +20,8 @@
       PROC_KEYWORDS = [:Given, :When, :Then, :And]
       KEYWORDS = [:Scenario, :Tag] + PROC_KEYWORDS
 
-      extend Lispy
-      acts_lispy :only => KEYWORDS, :retain_blocks_for => PROC_KEYWORDS
+      extend YourDSL
+      record_your_dsl :only => KEYWORDS, :retain_blocks_for => PROC_KEYWORDS
 
       # Using our language
       Scenario "this gets lispyified" do
@@ -96,23 +96,11 @@
 
      1 tests, 0 assertions, 0 failures, 1 errors, 0 skips
 
-Your crazy so-called 'DSL' is now decoupled from your wonderfully explicitly programmed library, I hope. Because I might have to modify it one day and man, if I see a rats nest of instance_execs and auto-generated classes I might just... write you a nasty letter. With angry faces like this: >:|
-
-## Now what?
-
-If you have any questions about this, or how I'm using it for real-world problems (I am!), please get in touch. Pete won't talk to me about this, and I bought his car and everything!!!
-
-## Why Lispy?
-
-To my mind, this whole API fandangle we've gotten ourselves into is due to Ruby having a nice enough syntax to describe APIs in a way that is easy to understand, but Ruby itself wasn't designed with this usage in mind. When I see lines like `has_one :brain` and `dep 'nginx' do` it reminds me of a feature of LISP, which is code as data. Ruby doesn't have this code as data facility but I reckon if it did, we'd have cleaner library implementations with it's idomatic syntax.
-
-Saying that, I've written about 10 lines of LISP in my life. Pete keeps telling me to go read SICP and I keep meaning to but then I end up at the local bar listening to some rock band and I'm like "crap, it's 3am". And even then, I wont get to use LISP at work because I don't think anyone in our company except for Pete has actually read SICP.
-
 ## Credits
 
-* Original concept and code by Ryan Allen (http://github.com/ryan-allen)
-* Redesign and refactoring by Evan Light (http://github.com/elight)
+* Lispy concept and original impl by Ryan Allen (http://github.com/ryan-allen/lispy)
+* Rewritten and extended by Evan Light (http://github.com/elight/yourdsl)
 
 ## License.
 
-Released under the MIT license (see MIT-LICENSE). GPL can go fart itself, seriously. I like open source, but I also like money.
+Released under the MIT license (see MIT-LICENSE).
