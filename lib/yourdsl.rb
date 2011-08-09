@@ -38,22 +38,21 @@ module YourDSL
 
     args = (args.length == 1 ? args.first : args)
 
-    record_as_sexp(sym, args, lineno)
-
-    if block
-      if @@remember_blocks_starting_with.include? sym
-        @current_scope.expressions.last.proc = block
-      else
-        nest(&block)
-      end
-    end
+    record_as_sexp(sym, args, lineno, &block)
   end
 
   private
 
-    def record_as_sexp(sym, args, lineno)
+    def record_as_sexp(sym, args, lineno, &block)
       @current_scope ||= Scope.new([])
       @current_scope.expressions << Expression.new(sym, args, lineno)
+      if block
+        if @@remember_blocks_starting_with.include? sym
+          @current_scope.expressions.last.proc = block
+        else
+          nest(&block)
+        end
+      end
     end
 
     def nest(&block)
