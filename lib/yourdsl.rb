@@ -44,7 +44,6 @@ module YourDSL
     @current_scope ||= Scope.new([])
     @current_scope.expressions << Expression.new(sym, args, lineno)
     if block
-      # there is some simpler recursive way of doing this, will fix it shortly
       if @@remember_blocks_starting_with.include? sym
         @current_scope.expressions.last.proc = block
       else
@@ -53,16 +52,17 @@ module YourDSL
     end
   end
 
-private
-  def nest(&block)
-    @stack.push @current_scope
+  private
 
-    new_scope = Scope.new([])
-    @current_scope.expressions.last.scope = new_scope
-    @current_scope = new_scope
+    def nest(&block)
+      @stack.push @current_scope
 
-    instance_exec(&block)
+      new_scope = Scope.new([])
+      @current_scope.expressions.last.scope = new_scope
+      @current_scope = new_scope
 
-    @current_scope = @stack.pop
-  end
+      instance_exec(&block)
+
+      @current_scope = @stack.pop
+    end
 end
