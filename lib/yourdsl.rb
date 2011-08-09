@@ -1,5 +1,5 @@
 module YourDSL
-  VERSION = '0.7.1'
+  VERSION = '0.7.2'
 
   class Scope < Struct.new(:expressions); end
   class Expression < Struct.new(:symbol, :args, :lineno, :proc, :scope); end
