@@ -33,16 +33,13 @@ module YourDSL
     file, lineno = $1, $2
     self.file = file
 
-    if !@@only.empty? && !@@only.include?(sym)
-      fail(NoMethodError, sym.to_s)
-    end
-    if !@@exclude.empty? && @@exclude.include?(sym)
-      fail(NoMethodError, sym.to_s)
-    end
+    assert_inclusion_of sym
+    assert_exclusion_of sym
 
     args = (args.length == 1 ? args.first : args)
-    @current_scope ||= Scope.new([])
-    @current_scope.expressions << Expression.new(sym, args, lineno)
+
+    record_as_sexp(sym, args, lineno)
+
     if block
       if @@remember_blocks_starting_with.include? sym
         @current_scope.expressions.last.proc = block
@@ -54,6 +51,11 @@ module YourDSL
 
   private
 
+    def record_as_sexp(sym, args, lineno)
+      @current_scope ||= Scope.new([])
+      @current_scope.expressions << Expression.new(sym, args, lineno)
+    end
+
     def nest(&block)
       @stack.push @current_scope
 
@@ -61,8 +63,20 @@ module YourDSL
       @current_scope.expressions.last.scope = new_scope
       @current_scope = new_scope
 
-      instance_exec(&block)
+      instance_eval(&block)
 
       @current_scope = @stack.pop
+    end
+
+    def assert_inclusion_of symbol
+      if !@@only.empty? && !@@only.include?(symbol)
+        fail(NoMethodError, symbol.to_s)
+      end
+    end
+
+    def assert_exclusion_of symbol
+      if !@@exclude.empty? && @@exclude.include?(symbol)
+        fail(NoMethodError, symbol.to_s)
+      end
     end
 end
