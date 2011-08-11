@@ -1,5 +1,11 @@
 # YourDSL
 
+A partial internal DSL compiler.
+
+Lexing/Parsing responsibilities are handled by a combination of the Ruby interpreter itself (Ruby already lexes and parses itself) and a recorder to capture undefined Ruby methods, via *method_missing*, as an Abstract Syntax Tree (AST).
+
+You supply the code generator.
+
 ## Assumptions.
 
 * People love libraries with DSLs like Sinatra and ActiveRecord and Babushka and AASM and (name your favourite Ruby library).
